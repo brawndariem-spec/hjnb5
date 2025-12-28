@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>公告栏 - 信息发布平台</title>
+    <title>公司公告栏</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -16,660 +16,309 @@
         body {
             background-color: #f5f7fa;
             color: #333;
-            line-height: 1.6;
-            padding-bottom: 40px;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 20px;
         }
         
         header {
-            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
-            color: white;
-            padding: 30px 0;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(106, 17, 203, 0.15);
+            position: relative;
+            overflow: hidden;
         }
         
         header h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
         }
         
         header p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
         
-        .main-content {
+        .header-decoration {
+            position: absolute;
+            top: -50px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        
+        .announcement-container {
             display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .announcements-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #2c3e50;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4b6cb7;
-            display: flex;
-            align-items: center;
-        }
-        
-        .section-title i {
-            margin-right: 10px;
-            color: #4b6cb7;
-        }
-        
-        .announcement-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
         
         .announcement-card {
-            background-color: #f9fafc;
-            border-left: 4px solid #4b6cb7;
-            border-radius: 8px;
-            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4a6cf7;
+            position: relative;
+            overflow: hidden;
         }
         
         .announcement-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
         
-        .announcement-card.priority {
-            border-left-color: #e74c3c;
-            background-color: #fff9f9;
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4a6cf7, #6a11cb);
+        }
+        
+        .announcement-card.important {
+            border-left-color: #ff6b6b;
+        }
+        
+        .announcement-card.important::before {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
         }
         
         .announcement-card.info {
-            border-left-color: #3498db;
+            border-left-color: #1dd1a1;
         }
         
-        .announcement-card.warning {
-            border-left-color: #f39c12;
-            background-color: #fffbf0;
+        .announcement-card.info::before {
+            background: linear-gradient(90deg, #1dd1a1, #10ac84);
         }
         
-        .announcement-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
-        .announcement-title {
+        .card-title {
             font-size: 1.4rem;
             font-weight: 600;
             color: #2c3e50;
         }
         
-        .announcement-date {
+        .card-date {
             font-size: 0.9rem;
             color: #7f8c8d;
-        }
-        
-        .announcement-content {
-            color: #555;
-            margin-bottom: 15px;
-            line-height: 1.7;
-        }
-        
-        .announcement-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-        
-        .announcement-author {
-            color: #4b6cb7;
-            font-weight: 500;
-        }
-        
-        .announcement-category {
-            background-color: #ecf0f1;
-            padding: 4px 10px;
+            background: #f8f9fa;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.85rem;
+        }
+        
+        .card-content {
             color: #555;
-        }
-        
-        .empty-announcements {
-            text-align: center;
-            padding: 40px 20px;
-            color: #7f8c8d;
-        }
-        
-        .empty-announcements i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #bdc3c7;
-        }
-        
-        .form-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-        
-        .form-group {
+            line-height: 1.6;
             margin-bottom: 20px;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #4b6cb7;
-            box-shadow: 0 0 0 2px rgba(75, 108, 183, 0.2);
-        }
-        
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #4b6cb7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: #3a5795;
-            transform: translateY(-2px);
-        }
-        
-        .btn-block {
-            width: 100%;
-        }
-        
-        .btn-danger {
-            background-color: #e74c3c;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-        
-        .priority-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-        
-        .priority-high {
-            background-color: #ffebee;
-            color: #e74c3c;
-        }
-        
-        .priority-normal {
-            background-color: #e8f4fc;
-            color: #3498db;
-        }
-        
-        .priority-low {
-            background-color: #f0f4e4;
-            color: #8bc34a;
-        }
-        
-        .action-buttons {
+        .card-tags {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-top: 15px;
         }
         
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.2s;
+        .tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
-        .delete-btn:hover {
-            color: #c0392b;
-            transform: scale(1.2);
+        .tag.general {
+            background-color: #e8f4ff;
+            color: #4a6cf7;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #7f8c8d;
-            font-size: 0.95rem;
+        .tag.important {
+            background-color: #ffeaea;
+            color: #ff6b6b;
         }
         
-        footer {
+        .tag.info {
+            background-color: #e8f8f3;
+            color: #1dd1a1;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        
+        .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 50px;
+            padding: 20px;
             color: #7f8c8d;
             font-size: 0.9rem;
+            border-top: 1px solid #eee;
         }
         
-        @media (max-width: 576px) {
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .announcement-container {
+                grid-template-columns: 1fr;
+            }
+            
             header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .announcement-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .announcement-footer {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1><i class="fas fa-bullhorn"></i> 公告栏</h1>
-            <p>发布和查看最新公告信息</p>
-        </div>
-    </header>
-    
     <div class="container">
-        <div class="main-content">
-            <section class="announcements-section">
-                <h2 class="section-title">
-                    <i class="fas fa-list"></i> 公告列表
-                    <span id="announcement-count" class="priority-badge priority-normal">3条公告</span>
-                </h2>
-                
-                <div class="announcement-list" id="announcement-list">
-                    <!-- 公告将通过JavaScript动态生成 -->
+        <header>
+            <div class="header-decoration"></div>
+            <h1><i class="fas fa-bullhorn icon"></i> 公司公告栏</h1>
+            <p>重要通知和信息发布</p>
+        </header>
+        
+        <div class="announcement-container">
+            <!-- 公告1 -->
+            <div class="announcement-card important">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-exclamation-circle"></i> 今日紧急晚报</h2>
+                    <span class="card-date">2025-12-28</span>
                 </div>
-                
-                <div class="empty-announcements" id="empty-announcements" style="display: none;">
-                    <i class="far fa-newspaper"></i>
-                    <h3>暂无公告</h3>
-                    <p>发布第一条公告来开始使用吧！</p>
+                <div class="card-content">
+                    <p>大司马与皮脚本发生冲突，现已进化到个人脚本作者与联邦的战争，据大司马所说事情的起因是因为皮脚本开源大司马，导致双方开始出现矛盾，但事实究竟是如何？我们暂时还不知道。</p>
                 </div>
-                
-                <div class="stats">
-                    <div>总计: <span id="total-announcements">3</span> 条公告</div>
-                    <div>最后更新: <span id="last-update">2023-10-15</span></div>
+                <div class="card-tags">
+                    <span class="tag important">重要</span>
+                    <span class="tag general">晚报通知</span>
                 </div>
-            </section>
+            </div>
             
-            <aside class="form-section">
-                <h2 class="section-title"><i class="fas fa-edit"></i> 发布新公告(这个只是做着玩的，没有实际功能)</h2>
-                
-                <form id="announcement-form">
-                    <div class="form-group">
-                        <label for="title">公告标题 <span class="required">*</span></label>
-                        <input type="text" id="title" class="form-control" placeholder="请输入公告标题" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="content">公告内容 <span class="required">*</span></label>
-                        <textarea id="content" class="form-control" placeholder="请输入公告内容..." required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="author">发布人 <span class="required">*</span></label>
-                        <input type="text" id="author" class="form-control" placeholder="请输入发布人姓名" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="category">公告分类</label>
-                        <select id="category" class="form-control">
-                            <option value="general">一般公告</option>
-                            <option value="important">重要通知</option>
-                            <option value="event">活动通知</option>
-                            <option value="maintenance">更新通知</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="priority">优先级</label>
-                        <select id="priority" class="form-control">
-                            <option value="normal">普通</option>
-                            <option value="high">高</option>
-                            <option value="low">低</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-block">
-                            <i class="fas fa-paper-plane"></i> 发布公告
-                        </button>
-                    </div>
-                </form>
-                
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-block btn-danger" id="clear-all">
-                        <i class="fas fa-trash-alt"></i> 清空所有公告
-                    </button>
+            <!-- 公告2 -->
+            <div class="announcement-card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-users"></i> 今日XU官网更新</h2>
+                    <span class="card-date">2025-12-28</span>
                 </div>
-                
-                <div class="usage-tips" style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed #eee; color: #7f8c8d; font-size: 0.9rem;">
-                    <h4><i class="fas fa-lightbulb"></i> 使用提示</h4>
-                    <ul style="margin-top: 10px; padding-left: 20px;">
-                        <li>公告发布后会自动出现在公告列表中</li>
-                        <li>点击公告卡片右侧的删除按钮可删除对应公告</li>
-                        <li>高优先级公告会以红色边框突出显示</li>
-                    </ul>
+                <div class="card-content">
+                    <p>今天更新了公告系统和快速进入热门服务器系统。</p>
                 </div>
-            </aside>
+                <div class="card-tags">
+                    <span class="tag general">更新通知</span>
+                    <span class="tag general">红姜长得真帅</span>
+                </div>
+            </div>
+            
+            <!-- 公告3 -->
+            <div class="announcement-card info">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-users"></i> 一般公告</h2>
+                    <span class="card-date">2023-10-10</span>
+                </div>
+                <div class="card-content">
+                    <p>我做了这么久的观望却没多少人用，我觉得很伤心。</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag info">表达心情</span>
+                    <span class="tag general">红姜真帅</span>
+                </div>
+            </div>
+            
+            <!-- 公告4 -->
+            <div class="announcement-card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-calendar-alt"></i> 元旦即将到来</h2>
+                    <span class="card-date">2025-12-28</span>
+                </div>
+                <div class="card-content">
+                    <p>元旦即将到来31号的晚上我们一起跨年。</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag general">活动通知</span>
+                    <span class="tag general">元旦</span>
+                </div>
+            </div>
+            
+            <!-- 公告5 -->
+            <div class="announcement-card important">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-shield-alt"></i> 快手防火墙被攻破</h2>
+                    <span class="card-date">2025-12-23</span>
+                </div>
+                <div class="card-content">
+                    <p>热门事件,快手被攻击,日期:2025-12-22夜间,攻击者:黑灰产,黑灰产利用自动化工具批量注册账号，绕过实名认证和内容审核机制，以“秒级”速度发布违规内容。攻击流量主要来自境外IP（如南美和东南亚），具有高度组织化特征。部分违规直播间包含病毒链接，可能诱导用户点击后导致微信账号被盗或诈骗。平台虽未证实大规模数据泄露，但用户需警惕个人信息安全风险。快手采取的应对:快手启动应急预案，包括限流、封禁违规账号及临时关闭直播功能。事件暴露了传统“人工+AI”审核体系在应对自动化攻击时的滞后性</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag important">重要</span>
+                    <span class="tag info">黑客袭击</span>
+                </div>
+            </div>
+            
+            <!-- 公告6 -->
+            <div class="announcement-card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-coffee"></i> roblox小更新</h2>
+                    <span class="card-date">2025-11-13</span>
+                </div>
+                <div class="card-content">
+                    <p>Roblox 已对其通用应用内的图标进行视觉焕新，将全平台菜单图标升级为更简洁现代的设计风格。图片:https://tinyurl.com/3eczvrev
+ 在应用的“更多”菜单中，原本的功能图标已替换为线条更简约的新样式——包含“创作”“博客”“商城”“个人资料”“精彩瞬间”等核心功能入口，既保留了功能辨识度，又让界面整体更具质感。此次更新是 Roblox 优化跨设备应用体验的一部分，旨在简化操作界面的同时，延续平台标志性视觉风格。
+目前新图标已逐步推送（不同地区上线节奏可能略有差异），功能逻辑未做调整，仅为视觉层面的优化升级！
+
+但是中文地区已经更改！更流畅！。</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag general">行政通知</span>
+                    <span class="tag info">福利</span>
+                </div>
+            </div>
         </div>
         
-        <footer>
-            <p>© 2025 公告栏系统 | 设计用于信息发布与管理 | 制作者红姜一定要尝 | 共 <span id="footer-count">3</span> 条公告</p>
-        </footer>
+        <div class="footer">
+            <p>© 2025 公司公告栏 | 最后更新: 2025年12月28日 | 本公告栏为静态展示，无发布和删除功能</p>
+        </div>
     </div>
 
     <script>
-        // 初始公告数据
-        let announcements = [
-            {
-                id: 1,
-                title: "更新通知",
-                content: "本次更新更新了公告系统，快速进入热门服务器系统。",
-                author: "系统管理员",
-                date: "2025-12-28",
-                category: "更新通知",
-                priority: "high"
-            },
-            {
-                id: 2,
-                title: "元旦通知",
-                content: "马上就要到元旦了，31号的晚上大家一起跨年。",
-                author: "系统管理员",
-                date: "2025-12-28",
-                category: "活动通知",
-                priority: "normal"
-            },
-            {
-                id: 3,
-                title: "通知",
-                content: "大家绝对不能做违法乱纪的事情。",
-                author: "系统管理员",
-                date: "2025-12-28",
-                category: "一般公告",
-                priority: "normal"
-            },
-            {
-                id: 4,
-                title: "今日晚报",
-                content: "震惊，大司马疑似骂人被集体围攻，目前我们可以得知，是大司马被皮脚本开源了，大司马才骂的人(这是来自大司马本人的话，是否是真实的还需要另外考证)，疑似又是一场联邦与个人脚本制作者的战争。",
-                author: "系统管理员",
-                date: "2025-12-28",
-                category: "活动通知",
-                priority: "normal"            
-            },                    
-        ];
-
-        // DOM元素
-        const announcementList = document.getElementById('announcement-list');
-        const announcementForm = document.getElementById('announcement-form');
-        const emptyAnnouncements = document.getElementById('empty-announcements');
-        const clearAllBtn = document.getElementById('clear-all');
-        const announcementCount = document.getElementById('announcement-count');
-        const totalAnnouncements = document.getElementById('total-announcements');
-        const footerCount = document.getElementById('footer-count');
-        const lastUpdate = document.getElementById('last-update');
-
-        // 初始化
+        // 添加简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            updateAnnouncementList();
-            updateStats();
-            
-            // 设置最后更新日期
-            const today = new Date();
-            lastUpdate.textContent = today.toISOString().split('T')[0];
-        });
-
-        // 更新公告列表
-        function updateAnnouncementList() {
-            announcementList.innerHTML = '';
-            
-            if (announcements.length === 0) {
-                emptyAnnouncements.style.display = 'block';
-                return;
-            }
-            
-            emptyAnnouncements.style.display = 'none';
-            
-            // 按日期降序排序（最新的在前面）
-            announcements.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // 生成公告卡片
-            announcements.forEach(announcement => {
-                const announcementCard = document.createElement('div');
-                announcementCard.className = `announcement-card ${announcement.priority}`;
-                
-                // 根据优先级设置样式类
-                let priorityClass = 'priority-normal';
-                let priorityText = '普通';
-                
-                if (announcement.priority === 'high') {
-                    priorityClass = 'priority-high';
-                    priorityText = '高优先级';
-                } else if (announcement.priority === 'low') {
-                    priorityClass = 'priority-low';
-                    priorityText = '低优先级';
-                }
-                
-                announcementCard.innerHTML = `
-                    <div class="announcement-header">
-                        <div>
-                            <h3 class="announcement-title">${announcement.title}</h3>
-                            <span class="priority-badge ${priorityClass}">${priorityText}</span>
-                        </div>
-                        <div class="announcement-date">${announcement.date}</div>
-                    </div>
-                    <div class="announcement-content">${announcement.content}</div>
-                    <div class="announcement-footer">
-                        <div class="announcement-author">
-                            <i class="fas fa-user"></i> ${announcement.author}
-                        </div>
-                        <div>
-                            <span class="announcement-category">${announcement.category}</span>
-                            <button class="delete-btn" data-id="${announcement.id}" title="删除公告">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                announcementList.appendChild(announcementCard);
-            });
-            
-            // 为删除按钮添加事件监听
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    deleteAnnouncement(id);
-                });
-            });
-        }
-
-        // 更新统计数据
-        function updateStats() {
-            const count = announcements.length;
-            announcementCount.textContent = `${count}条公告`;
-            totalAnnouncements.textContent = count;
-            footerCount.textContent = count;
-        }
-
-        // 发布新公告  
-        announcementForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const author = document.getElementById('author').value;
-            const category = document.getElementById('category').value;
-            const priority = document.getElementById('priority').value;
-            
-            // 获取当前日期
-            const today = new Date();
-            const dateString = today.toISOString().split('T')[0];
-            
-            // 创建新公告对象
-            const newAnnouncement = {
-                id: announcements.length > 0 ? Math.max(...announcements.map(a => a.id)) + 1 : 1,
-                title,
-                content,
-                author,
-                date: dateString,
-                category: document.getElementById('category').options[document.getElementById('category').selectedIndex].text,
-                priority
-            };
-            
-            // 添加到公告数组
-            announcements.unshift(newAnnouncement);
-            
-            // 更新界面
-            updateAnnouncementList();
-            updateStats();
-            
-            // 重置表单
-            announcementForm.reset();
-            
-            // 显示成功消息
-            showNotification('公告发布成功！');
-        });
-
-        // 删除公告
-        function deleteAnnouncement(id) {
-            if (confirm('确定要删除这条公告吗？')) {
-                announcements = announcements.filter(announcement => announcement.id !== id);
-                updateAnnouncementList();
-                updateStats();
-                showNotification('公告已删除！');
-            }
-        }
-
-        // 清空所有公告
-        clearAllBtn.addEventListener('click', function() {
-            if (announcements.length === 0) {
-                showNotification('当前没有公告可清空！');
-                return;
-            }
-            
-            if (confirm('确定要清空所有公告吗？此操作不可撤销！')) {
-                announcements = [];
-                updateAnnouncementList();
-                updateStats();
-                showNotification('所有公告已清空！');
-            }
-        });
-
-        // 显示通知消息
-        function showNotification(message) {
-            // 创建通知元素
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: #4b6cb7;
-                color: white;
-                padding: 15px 25px;
-                border-radius: 6px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                transform: translateX(150%);
-                transition: transform 0.3s ease;
-                font-weight: 500;
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            // 显示通知
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 10);
-            
-            // 3秒后隐藏并移除通知
-            setTimeout(() => {
-                notification.style.transform = 'translateX(150%)';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        }
-
-        // 为分类和优先级选项添加样式提示
-        document.getElementById('category').addEventListener('change', function() {
-            const options = this.options;
-            for (let i = 0; i < options.length; i++) {
-                options[i].style.backgroundColor = i === this.selectedIndex ? '#e8f4fc' : '';
-            }
-        });
-
-        document.getElementById('priority').addEventListener('change', function() {
-            const options = this.options;
-            for (let i = 0; i < options.length; i++) {
-                options[i].style.backgroundColor = i === this.selectedIndex ? '#e8f4fc' : '';
-            }
-        });
-    </script>
-</body>
-</html>                             
+            // 卡片点击效果
+            const cards = document.querySelectorAll('.announcement-card');
+            cards.forEach(card => {
+                card.addEventListener('
